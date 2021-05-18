@@ -3,6 +3,7 @@ package com.example.architecturecomponents;
 import android.os.Bundle;
 
 import com.example.architecturecomponents.model.NoteEntity;
+import com.example.architecturecomponents.ui.NotesAdapter;
 import com.example.architecturecomponents.utilities.SampleData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
 
     private List<NoteEntity> notesData = new ArrayList<>();
+    private NotesAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
+
+        mAdapter = new NotesAdapter(notesData, this);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
