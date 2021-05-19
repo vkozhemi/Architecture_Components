@@ -3,6 +3,8 @@ package com.example.architecturecomponents.database;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+
 import com.example.architecturecomponents.utilities.SampleData;
 
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.concurrent.Executors;
 public class AppRepository {
     public static final String LOG = "LOG_TAG";
     private static AppRepository ourInstance;
-    public List<NoteEntity> mNotes;
+    public LiveData<List<NoteEntity>> mNotes;
     private AppDatabase mDb;
     private Executor executor = Executors.newSingleThreadExecutor();
 
@@ -24,8 +26,8 @@ public class AppRepository {
     }
 
     private AppRepository(Context context) {
-        mNotes = SampleData.getNotes();
         mDb = AppDatabase.getInstance(context);
+        mNotes = getAllNotes();
     }
 
     public void addSampleData() {
@@ -37,5 +39,19 @@ public class AppRepository {
                 Log.d(LOG, "addSampleData run");
             }
         });
+    }
+
+    private LiveData<List<NoteEntity>> getAllNotes() {
+        return mDb.noteDao().getAll();
+    }
+
+    public void deleteAllNotes() {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.noteDao().deleteAll();
+            }
+        });
+
     }
 }

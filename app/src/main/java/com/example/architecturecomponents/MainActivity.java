@@ -9,11 +9,10 @@ import com.example.architecturecomponents.viewmodel.MainViewModel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,27 +49,35 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
-        initViewModel();
         initRecyclerView();
-
-        notesData.addAll(mViewModel.mNotes);
-
-        for (NoteEntity note : notesData) {
-            Log.d(LOG_TAG, note.toString());
-        }
+        initViewModel();
     }
 
     private void initViewModel() {
+
+        final Observer<List<NoteEntity>> notesObserver =
+                new Observer<List<NoteEntity>>() {
+                    @Override
+                    public void onChanged(List<NoteEntity> noteEntities) {
+                        notesData.clear();
+                        notesData.addAll(noteEntities);
+                        if (mAdapter == null) {
+                            mAdapter = new NotesAdapter(notesData, MainActivity.this);
+                            mRecyclerView.setAdapter(mAdapter);
+                        } else {
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+                };
+
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mViewModel.mNotes.observe(this, notesObserver);
     }
 
     private void initRecyclerView() {
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-
-        mAdapter = new NotesAdapter(notesData, this);
-        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -91,9 +98,16 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_add_sample_data) {
             addSampleData();
             return true;
+        } else if (id == R.id.action_delete_all) {
+            deleteAllNotes();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteAllNotes() {
+        mViewModel.deleteAllNotes();
     }
 
     private void addSampleData() {
