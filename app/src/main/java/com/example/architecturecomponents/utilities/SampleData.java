@@ -1,18 +1,12 @@
 package com.example.architecturecomponents.utilities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.example.architecturecomponents.model.NoteEntity;
+import com.example.architecturecomponents.database.NoteEntity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public class SampleData {
     private static final String SAMPLE_TEXT_1 = "A simple note";
