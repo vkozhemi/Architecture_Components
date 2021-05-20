@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,6 +27,7 @@ import java.util.zip.Inflater;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.architecturecomponents.utilities.Constance.EDITING_KEY;
 import static com.example.architecturecomponents.utilities.Constance.NOTE_ID_KEY;
 
 public class EditorActivity extends AppCompatActivity {
@@ -34,7 +36,7 @@ public class EditorActivity extends AppCompatActivity {
     TextView mTextView;
 
     private EditorViewModel mViewModel;
-    private boolean mNewNote;
+    private boolean mNewNote, mEditing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,10 @@ public class EditorActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        if (savedInstanceState != null) {
+            mEditing = savedInstanceState.getBoolean(EDITING_KEY);
+        }
+
         initViewModel();
 
     }
@@ -61,7 +67,7 @@ public class EditorActivity extends AppCompatActivity {
         mViewModel.mLiveNote.observe(this, new Observer<NoteEntity>() {
             @Override
             public void onChanged(NoteEntity noteEntity) {
-                if (noteEntity != null) {
+                if (noteEntity != null && !mEditing) {
                     mTextView.setText(noteEntity.getText());
                 }
             }
@@ -107,5 +113,11 @@ public class EditorActivity extends AppCompatActivity {
     private void saveAndReturn() {
         mViewModel.saveNote(mTextView.getText().toString());
         finish();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        outState.putBoolean(EDITING_KEY, true);
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 }
