@@ -1,21 +1,28 @@
 package com.example.architecturecomponents.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.architecturecomponents.EditorActivity;
 import com.example.architecturecomponents.R;
 import com.example.architecturecomponents.database.NoteEntity;
+import com.example.architecturecomponents.utilities.Constance;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.architecturecomponents.utilities.Constance.NOTE_ID_KEY;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
@@ -39,6 +46,16 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final NoteEntity note = mNotes.get(position);
         holder.mTextView.setText(note.getText());
+
+
+        holder.mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, EditorActivity.class);
+                intent.putExtra(NOTE_ID_KEY, note.getId());
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -50,6 +67,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
         @BindView(R.id.note_text)
         TextView mTextView;
+
+        @BindView(R.id.fab)
+        FloatingActionButton mFab;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

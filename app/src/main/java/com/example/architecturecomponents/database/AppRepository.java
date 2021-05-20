@@ -54,4 +54,8 @@ public class AppRepository {
         });
 
     }
+
+    public NoteEntity getNoteById(int noteId) {
+        return mDb.noteDao().getNoteById(noteId);
+    }
 }
