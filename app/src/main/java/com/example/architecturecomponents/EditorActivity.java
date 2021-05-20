@@ -8,12 +8,14 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -36,7 +38,10 @@ public class EditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_editor);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        CollapsingToolbarLayout toolBarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_check);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        CollapsingToolbarLayout toolBarLayout = findViewById(R.id.toolbar_layout);
         toolBarLayout.setTitle(getTitle());
 
         ButterKnife.bind(this);
@@ -67,5 +72,25 @@ public class EditorActivity extends AppCompatActivity {
             int noteId = extras.getInt(NOTE_ID_KEY);
             mViewModel.loadData(noteId);
         }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            saveAndReturn();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        saveAndReturn();
+    }
+
+    private void saveAndReturn() {
+        mViewModel.saveNote(mTextView.getText().toString());
+        finish();
     }
 }
