@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.architecturecomponents.EditorActivity;
 import com.example.architecturecomponents.R;
 import com.example.architecturecomponents.database.NoteEntity;
-import com.example.architecturecomponents.utilities.Constance;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
